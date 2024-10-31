@@ -10,5 +10,5 @@ route.put('/:id', updateAbsence);        // Modifier une absence
 route.delete('/:id', delAbsence);        // Supprimer une absence
 
 
-
+//
 export default route;
