@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { getRapports } from '../../controllers/rapportdaciduite.js';
+
 const router = express.Router();
-const { getRapports } = require('../controllers/rapportdaciduite.js');
 
 router.get('/rapports', getRapports);
 
-module.exports = router;
+export default router;

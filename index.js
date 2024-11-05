@@ -1,20 +1,40 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const sequelize = require('./config/connection.js');
-const authRoutes = require('./Routes/routes/authentification.js');
-const reportRoutes = require('./Routes/routes/rapportdaciduite.js');
+import express from "express";
+import cors from 'cors';
+import helmet from "helmet";
+import compression from "compression";
+import bodyParser from "body-parser";
+import dotenv from 'dotenv';
 
+dotenv.config();
+
+// Import the database connection
+import sequelize from "./Config/connection.js";
+
+// Import routes
+import authRoutes from "./Routes/routes/authentification.js";
+import reportRoutes from "./Routes/routes/rapportdaciduite.js";
+
+// Create the Express server
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Use middleware
+app.use(cors());
+app.use(helmet());
+app.use(compression());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// Routes
+// Sync database and create tables if necessary
+// Uncomment the line below to force the database to re-create tables
+// sequelize.sync({ force: true });
+
+// Set up routes
 app.use('/api/auth', authRoutes);
 app.use('/api/report', reportRoutes);
 
-// Sync database
+// Start the server
+const PORT = process.env.PORT || 5000;
+
 sequelize.sync()
   .then(() => {
     app.listen(PORT, () => {

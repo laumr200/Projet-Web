@@ -1,31 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/connection.js');
+import { Sequelize, DataTypes } from 'sequelize';
+import sequelize from '../Config/connection.js';
 
 const Rapport = sequelize.define('Rapport', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    employeName: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    absences: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    retards: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    conges: {
-        type: DataTypes.INTEGER,
+    content: {
+        type: DataTypes.TEXT,
         allowNull: false
     }
-}, {
-    tableName: 'rapports',
-    timestamps: false
 });
 
-module.exports = Rapport;
+export default Rapport;
