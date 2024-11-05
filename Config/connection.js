@@ -1,24 +1,17 @@
 //Configuration de la connection a la basse de donnees 
 import { Sequelize } from 'sequelize';
 
-// Configuration de la base de données
-const database = new Sequelize('gestion_absences_retards', 'Laura', 'Laura', {
-    host: 'localhost', // ou l'adresse de ton serveur de base de données
-    dialect: 'mysql',  // Utiliser le dialecte MySQL
-    logging: false,    // Désactive l'affichage des requêtes SQL
+//Importer les informations de la base de donnees (.env)
+import dotenv from 'dotenv'
+const ENV = dotenv.config().parsed
+
+
+//Creation de la connection
+const database = new Sequelize(ENV.DB_NAME, ENV.DB_USER, ENV.DB_PASSWORD, {
+    host: ENV.DB_HOST,
+    dialect: ENV.DB_DIALECT
 });
 
-// Test de la connexion à la base de données
-const testConnection = async () => {
-    try {
-        await database.authenticate();
-        console.log('Connexion à la base de données réussie !');
-    } catch (error) {
-        console.error('Erreur de connexion à la base de données:', error);
-    }
-};
-
-testConnection();
 
 export default database;
 

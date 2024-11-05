@@ -13,6 +13,14 @@ const Employe = database.define('Employe', {
         allowNull: false, // L'email est obligatoire
         unique: true, // L'email doit être unique
     },
+    telephone: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    adresse: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     date_d_embauche: {
         type: DataTypes.DATEONLY,
         allowNull: false, // La date d'embauche est obligatoire

@@ -1,5 +1,5 @@
 
-import Absence from '../Models/Absence.js'; // Import du modèle Absence
+import   Absence  from '../Models/Absence.js';// Import du modèle Absence
 
 // 1. Récupérer toutes les absences
 export const getAllAbsences = async (req, res) => {

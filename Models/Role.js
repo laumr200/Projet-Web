@@ -1,5 +1,6 @@
-import database from '../Config/connection.js';
 import { DataTypes } from 'sequelize';
+import database from '../Config/connection.js';
+
 
 // Création du modèle Rôle
 const Role = database.define('Role', {
