@@ -21,6 +21,13 @@ const Employe = database.define('Employe', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    mot_de_passe:{
+        type: DataTypes.STRING,
+        allowNull: false // Le nom est obligatoire
+    },
+    photo:{
+        type: DataTypes.STRING,
+    },
     date_d_embauche: {
         type: DataTypes.DATEONLY,
         allowNull: false, // La date d'embauche est obligatoire

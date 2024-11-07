@@ -1,7 +1,9 @@
 
-import { Employe , Absence, Role } from '../Models/relations.js' // Import du modèle Employé
+import { Employe , Absence, Role } from '../Models/relations.js' 
 
-// 1. Liste des employés
+ // importer le module qui permet de hacher le mots de passe 
+ import bycript from 'bcryptjs'
+
 export const getAllEmployes = async (req, res) => {
     try {
         const employes = await Employe.findAll({ include: ['role'] });
@@ -14,9 +16,14 @@ export const getAllEmployes = async (req, res) => {
 
 // 2. Ajout d'un employé
 export const addEmploye = async (req, res) => {
-    const newEmploye = req.body;
+    //recuperer les informations du nouvel employe (formulaire ou postman)
+    const {mot_de_passe , ...restnewEmploye}= req.body;
+    
+    //Hachage du mot de passe
+    const motDePasseHache=bycript.hashSync(mot_de_passe)
     try {
-        const employe = await Employe.create(newEmploye);
+        //inserer le nouvel employe dans la table employe dans la table des employes 
+        const employe = await Employe.create({mot_de_passe :motDePasseHache,...restnewEmploye});
         res.status(201).json({ data: employe });
     } catch (error) {
         console.error("Erreur lors de l'ajout de l'employé:", error);

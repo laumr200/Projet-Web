@@ -8,6 +8,7 @@ import dotenv from 'dotenv';                // Importer dotenv
 
 //importer la connexion a la base de donnees
 import database from './Config/connection.js';  // Importer la connexion à la base de données
+database.sync({alter:true})
 
 // Importer les routes
 import employeRoutes from './Routes/Employeroutes.js';
