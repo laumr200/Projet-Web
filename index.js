@@ -1,28 +1,18 @@
-// configure le serveur, importe les routes et synchronise la base de données.
-import express from 'express';  // Importer express
-import bodyParser from 'body-parser';  // Importer body-parser
-import database from './Config/connection.js';  // Importer la connexion à la base de données
-import userRoutes from './Routes/Employeroutes.js';  // Importer les routes des utilisateurs
-import roleRoutes from './Routes/Roleroutes.js';  // Importer les routes des rôles
-import absenceRoutes from './Routes/Absenceroutes.js';  // Importer les routes d'absence
+import express from 'express';
+import congeRoutes from './Projet-Web/Routes/Employeroutes.js';
+import employeRoutes from './Projet-Web/Routes/Employeroutes.js';
+import retardRoutes from './Projet-Web/Routes/retardroutes.js';
 
+dotenv.config();
+const app = express();
+app.use(express.json());
 
-const app = express();  // Créer l'application Express
-const PORT = process.env.PORT || 3000;  // Définir le port d'écoute
+// Usar as rotas
+app.use('/api/conges', congeRoutes);
+app.use('/api/employes', employeRoutes);
+app.use('/api/retards', retardRoutes);
 
-// Middleware pour analyser le corps des requêtes JSON
-app.use(bodyParser.json());
-
-// Routes
-app.use('/api/employes', employeRoutes);  
-app.use('/api/roles', roleRoutes);       
-app.use('/api/absences', absenceRoutes);  
-
-// Synchronisation des modèles avec la base de données
-database.sync().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Serveur en cours d'exécution sur le port ${PORT}`);  // Message indiquant que le serveur fonctionne
-    });
-}).catch(error => {
-    console.error(' On nest pas capables de se connecter au database:', error);  // Gérer les erreurs de connexion à la base de données
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
