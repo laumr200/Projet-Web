@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import Employe from './employe.js';
+import Employe from './Employe.js';
+
 
 const Conge = sequelize.define('Conge', {
     date_conge: DataTypes.DATE,
