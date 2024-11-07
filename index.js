@@ -1,18 +1,40 @@
-import express from 'express';
-import congeRoutes from './Projet-Web/Routes/Employeroutes.js';
-import employeRoutes from './Projet-Web/Routes/Employeroutes.js';
-import retardRoutes from './Projet-Web/Routes/retardroutes.js';
+//configure le serveur, importe les routes et synchronise la base de données.
+import express from 'express';             // Importer express
+import bodyParser from 'body-parser';       // Importer body-parser
+import cors from 'cors';                    // Importer cors
+import helmet from 'helmet';                // Importer helmet
+import compression from 'compression';      // Importer compression
+import dotenv from 'dotenv';                // Importer dotenv
 
-dotenv.config();
+//importer la connexion a la base de donnees
+import database from './Config/connection.js';  // Importer la connexion à la base de données
+database.sync({alter:true})
+
+// Importer les routes
+import employeRoutes from './Routes/Employeroutes.js';
+import roleRoutes from './Routes/Roleroutes.js';
+import absenceRoutes from './Routes/Absenceroutes.js';
+
+
+//Creation du serveur
 const app = express();
-app.use(express.json());
 
-// Usar as rotas
-app.use('/api/conges', congeRoutes);
-app.use('/api/employes', employeRoutes);
-app.use('/api/retards', retardRoutes);
+//Utiliser les librairies
+app.use(cors());                    // Activer CORS
+app.use(helmet());                  // Protéger l'application avec Helmet
+app.use(compression());             // Compresser les réponses
+app.use(bodyParser.json());         // Middleware pour analyser le corps des requêtes JSON
+app.use(bodyParser.urlencoded({ extended: false }))
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+// Routes
+app.use('/api/employes', employeRoutes);    // Routes pour les employés
+app.use('/api/roles', roleRoutes);          // Routes pour les rôles
+app.use('/api/absences', absenceRoutes);    // Routes pour les absences
+
+// Charger les variables d'environnement
+dotenv.config();
+
+
+//Demarrer les serveur
+const PORT =dotenv.config().parsed.PORT
+app.listen(PORT, () => console.log(`Le serveur tourne sur le port ${PORT}`))
