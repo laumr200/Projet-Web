@@ -3,10 +3,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT
+const ENV = process.env;
+
+const database = new Sequelize(ENV.DB_NAME, ENV.DB_USER, ENV.DB_PASSWORD, {
+    host: ENV.DB_HOST,
+    dialect: ENV.DB_DIALECT,
+    port: ENV.DB_PORT,
 });
 
-export default sequelize;
+// Optional connection test
+(async () => {
+    try {
+        await database.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+})();
+
+export default database;

@@ -8,11 +8,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Import the database connection
-import sequelize from "./Config/connection.js";
+import sequelize from "./Config/connection.js"; // Ensure this path is correct
 
 // Import routes
-import authRoutes from "./Routes/routes/authentification.js";
-import reportRoutes from "./Routes/routes/rapportdaciduite.js";
+import authRoutes from "./Routes/authentification.js";
+import reportRoutes from "./Routes/rapportdaciduite.js";
 
 // Create the Express server
 const app = express();
