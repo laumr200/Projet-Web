@@ -13,6 +13,7 @@ import sequelize from "./Config/connection.js"; // Ensure this path is correct
 // Import routes
 import authRoutes from "./Routes/authentification.js";
 import reportRoutes from "./Routes/rapportdaciduite.js";
+import auditLogRoutes from './Routes/auditlog.js'; // Import the audit log route
 
 // Create the Express server
 const app = express();
@@ -25,17 +26,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Sync database and create tables if necessary
-// Uncomment the line below to force the database to re-create tables
-// sequelize.sync({ force: true });
+// sequelize.sync({ force: true }); // Uncomment for development only if you need to re-create tables
 
 // Set up routes
-app.use('/api/auth', authRoutes);
-app.use('/api/report', reportRoutes);
+app.use('/api/auth', authRoutes); // Authentication route
+app.use('/api/report', reportRoutes); // Reports route
+app.use('/api/auditlog', auditLogRoutes); // Audit log route
+
+// Catch-all error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: 'Something went wrong' });
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync()
+sequelize.sync() // Ensure that the database syncs correctly
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
