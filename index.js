@@ -14,6 +14,7 @@ database.sync({alter:true})
 import employeRoutes from './Routes/Employeroutes.js';
 import roleRoutes from './Routes/Roleroutes.js';
 import absenceRoutes from './Routes/Absenceroutes.js';
+import alerteRoutes from './Routes/Alerteroutes.js';
 
 
 //Creation du serveur
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/api/employes', employeRoutes);    // Routes pour les employés
 app.use('/api/roles', roleRoutes);          // Routes pour les rôles
 app.use('/api/absences', absenceRoutes);    // Routes pour les absences
+app.use('/api/alertes', alerteRoutes);     //Routes pour les alertes
 
 // Charger les variables d'environnement
 dotenv.config();
