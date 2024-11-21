@@ -1,5 +1,7 @@
 
-import   Absence  from '../Models/Absence.js';// Import du modèle Absence
+import   {Absence}  from '../Models/relations.js';// Import du modèle Absence
+import {validationResult} from "express-validator";
+
 
 // 1. Récupérer toutes les absences
 export const getAllAbsences = async (req, res) => {
@@ -14,17 +16,31 @@ export const getAllAbsences = async (req, res) => {
 
 // 2. Ajouter une absence
 export const addAbsence = async (req, res) => {
+     // Vérification des erreurs de validation
+     const errors = validationResult(req);
+     if (!errors.isEmpty()) {
+         return res.status(400).json({ errors: errors.array() });
+     }
     try {
-        const absence = await Absence.create(req.body);
-        res.status(201).json({ data: absence });
+        const { absences } = req.body;
+
+        // Création en masse des absences
+        const createdAbsences = await Absence.bulkCreate(absences, { validate: true });
+
+        res.status(201).json({ message: "Absences ajoutées avec succès", data: createdAbsences });
     } catch (error) {
-        console.error("Erreur lors de l'ajout de l'absence:", error);
-        res.status(400).json({ message: "Données d'absence invalides" });
+        console.error("Erreur lors de l'ajout des absences:", error);
+        res.status(400).json({ message: "Erreur lors de l'ajout des absences", error: error.message });
     }
 };
 
 // 3. Modifier une absence
 export const updateAbsence = async (req, res) => {
+    // Vérification des erreurs de validation
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const absence = await Absence.findByPk(req.params.id);
         if (!absence) return res.status(404).json({ message: "Absence non trouvée" });
