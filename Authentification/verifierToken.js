@@ -14,7 +14,7 @@ export const verifierToken = (req, res, next) => {
     jwt.verify(token, process.env.CODE_SECRET, (err, payload) => {
         if (err) return res.status(401).json({ message: err.message })
 
-        req.userId = payload.id
+        req.employeId = payload.id
 
         next()
     })

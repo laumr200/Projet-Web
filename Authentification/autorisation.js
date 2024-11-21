@@ -1,9 +1,9 @@
-//Importer le modele Etudiant
+//Importer le modele employe
 import { Employe } from '../Models/relations.js'
 
 const autoriser = roles => async (req, res, next) => {
     //roles peut etre plusieurs
-    //roles=['admin','etudiant']
+    //roles=['admin','programmer']
 
     //Recuperer l'id a partir de la req
     const id = req.employeId
@@ -12,10 +12,10 @@ const autoriser = roles => async (req, res, next) => {
 
     try {
         const employe = await Employe.findByPk(id)
-        if (!user) return res.status(404).json({ message: "Cet employe n'existe pas!" })
+        if (!employe) return res.status(404).json({ message: "Cet employe n'existe pas!" })
 
         //Recuperer le role de la personne 
-        const employeRoles = await user.getRoles()
+        const employeRoles = await Employe.getRoles()
 
         const hasRole = false
         const employeRoleTitles = employeRoles.map(role => role.titre.toLowerCase())

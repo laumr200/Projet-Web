@@ -6,14 +6,17 @@ import bcrypt from 'bcryptjs'
 //Importer le module qui genere la clef
 import jwt from 'jsonwebtoken'
 
+//ajouter les validations 
+
+import {validationResult} from "express-validator"
 
 export const login = async (req, res) => {
     
     //Recuperation des resultats de la validation 
-    // const errors = validationResult(req)
-    // if (!errors.isEmpty()) {
-    //     return res.status(400).json({ errors: errors.array() });
-    // }
+     const errors = validationResult(req)
+     if (!errors.isEmpty()) {
+         return res.status(400).json({ errors: errors.array() });
+    }
     
     //Les informations de connexion
 

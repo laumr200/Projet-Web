@@ -1,12 +1,14 @@
 
+import bcrypt from 'bcryptjs'
 import { Employe , Absence, Role } from '../Models/relations.js' 
+import {validationResult} from "express-validator";
 
- // importer le module qui permet de hacher le mots de passe 
- import bycript from 'bcryptjs'
 
+
+ ////-1 Lecture de la liste des utilisateurs
 export const getAllEmployes = async (req, res) => {
     try {
-        const employes = await Employe.findAll({ include: ['role'] });
+        const employes = await Employe.findAll();
         res.status(200).json({ data: employes });
     } catch (error) {
         console.error('Erreur lors de la récupération des employés:', error);
@@ -15,21 +17,32 @@ export const getAllEmployes = async (req, res) => {
 };
 
 // 2. Ajout d'un employé
-export const addEmploye = async (req, res) => {
-    //recuperer les informations du nouvel employe (formulaire ou postman)
-    const {mot_de_passe , ...restnewEmploye}= req.body;
-    
-    //Hachage du mot de passe
-    const motDePasseHache=bycript.hashSync(mot_de_passe)
+export const addEmployes = async (req, res) => {
+    // Vérification des erreurs de validation
+    const errors = validationResult(req);  // Vérifier les erreurs
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });  // Si des erreurs existent, retourner un message d'erreur
+    }
+
+    const employes = req.body; // Array of employe objects
+    const picture = req.file;
+    const imagePath = picture?.path?.split('\\').join('/');
+    const fullPath = picture ? req.protocol + '://' + req.get('host') + '/' + imagePath : null;
+
     try {
-        //inserer le nouvel employe dans la table employe dans la table des employes 
-        const employe = await Employe.create({mot_de_passe :motDePasseHache,...restnewEmploye});
-        res.status(201).json({ data: employe });
+        const results = await Promise.all(
+            employes.map(async (employe) => {
+                const { mot_de_passe, ...restOfEmploye } = employe;
+                const motDePasseCrypte = bcrypt.hashSync(mot_de_passe);
+                return await Employe.create({ ...restOfEmploye, mot_de_passe: motDePasseCrypte, photo: fullPath });
+            })
+        );
+        res.status(201).json({ message: "Employés ajoutés avec succès", data: results });
     } catch (error) {
-        console.error("Erreur lors de l'ajout de l'employé:", error);
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: "Erreur lors de l'ajout des employés", error: error.message });
     }
 };
+
 
 // 3. Suppression d'un employé
 export const delEmploye = async (req, res) => {
@@ -61,6 +74,12 @@ export const findEmploye = async (req, res) => {
 export const updateEmploye = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
+
+    // Vérification des erreurs de validation
+    const errors = validationResult(req);  // Vérifier les erreurs
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });  // Si des erreurs existent, retourner un message d'erreur
+    }
     try {
         const employe = await Employe.findByPk(id);
         if (!employe) return res.status(404).json({ message: "Employé non trouvé" });
